@@ -222,21 +222,20 @@ BioDIGS_soil_data <- function(info = TRUE) {
     select(
       collection_date,
       site_id,
-      # sample_id,
-      # site_name_rep_detail,
-      # tidyr::ends_with("EPA3051"),
-      # water_pH,
-      # OM_by_LOI_pct,
-      # tidyr::ends_with("Mehlich3"),
-      # Est_CEC,
-      # Base_Sat_pct,
+      sample_id,
+      site_name_rep_detail,
+      tidyr::ends_with("EPA3051"),
+      water_pH,
+      OM_by_LOI_pct,
+      tidyr::ends_with("Mehlich3"),
+      Est_CEC,
+      Base_Sat_pct,
       P_Sat_ratio
     ) %>%
-    # mutate(As_EPA3051 = case_when(As_EPA3051 == "< 3.0" ~ "0", TRUE ~ As_EPA3051)) %>%  # As can't be detected lower than 3.0
-    # mutate(Cd_EPA3051 = case_when(Cd_EPA3051 == "< 0.2" ~ "0", TRUE ~ Cd_EPA3051)) %>%  # Cd can't be detected lower than 0.2
-    # mutate(across(5:28, \(x) case_when(x == "Not yet tested" ~ NA, TRUE ~ x))) %>%
-    # mutate(across(5:28, \(x) as.numeric(x))) %>%
-    head()
+    mutate(As_EPA3051 = case_when(As_EPA3051 == "< 3.0" ~ "0", TRUE ~ As_EPA3051)) %>%  # As can't be detected lower than 3.0
+    mutate(Cd_EPA3051 = case_when(Cd_EPA3051 == "< 0.2" ~ "0", TRUE ~ Cd_EPA3051)) %>%  # Cd can't be detected lower than 0.2
+    mutate(across(5:28, \(x) case_when(x == "Not yet tested" ~ NA, TRUE ~ x))) %>%
+    mutate(across(5:28, \(x) as.numeric(x)))
 
   if (info) {
     cli_alert_warning(
