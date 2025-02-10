@@ -4,7 +4,7 @@
 \alias{getdata}
 \title{Gets relevant data from a specified snapshot.}
 \usage{
-getdata(local = T, snapshot = NULL)
+getdata(local = F, snapshot = NULL)
 }
 \arguments{
 \item{local}{TRUE or FALSE, whether to use a local file or pull from GitHub. Can be used if you don't have an internet connection.}

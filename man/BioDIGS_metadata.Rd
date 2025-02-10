@@ -2,7 +2,7 @@
 % Please edit documentation in R/getdata.R
 \name{BioDIGS_metadata}
 \alias{BioDIGS_metadata}
-\title{Produce data in a nice clean format for use in R.}
+\title{BioDIGS Site metadata}
 \usage{
 BioDIGS_metadata(info = TRUE)
 }
@@ -13,7 +13,7 @@ BioDIGS_metadata(info = TRUE)
 a \code{data.frame}
 }
 \description{
-Produce data in a nice clean format for use in R.
+BioDIGS sampling site information in a clean format for use in R. For more about BioDIGS, see \url{https://biodigs.org/}.
 }
 \details{
 \tabular{lll}{
