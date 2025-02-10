@@ -3,6 +3,7 @@
 export("%>%")
 export(BioDIGS_DNA_conc_data)
 export(BioDIGS_metadata)
+export(BioDIGS_note)
 export(BioDIGS_soil_data)
 export(clean_gps_points)
 export(getdata)

@@ -100,8 +100,8 @@ BioDIGS_metadata <- function(info = TRUE) {
     distinct()
 
   if (info) {
-    cli_alert(col_cyan("See the data dictionary by typing ?BioDIGS_metadata() ."))
-    cli_alert(col_cyan("Visit us at {.url https://biodigs.org/}"))
+    BioDIGS_note("?BioDIGS_metadata()")
+    BioDIGS_note(website = T)
   }
 
   return(metadata_)
@@ -158,10 +158,8 @@ BioDIGS_DNA_conc_data <- function(info = TRUE) {
     )
 
   if (info) {
-    cli_alert(col_cyan(
-      "See the data dictionary by typing ?BioDIGS_DNA_conc_data() ."
-    ))
-    cli_alert(col_cyan("Visit us at {.url https://biodigs.org/}"))
+    BioDIGS_note("?BioDIGS_DNA_conc_data()")
+    BioDIGS_note(website = T)
   }
 
   return(dna_data_)
@@ -224,31 +222,30 @@ BioDIGS_soil_data <- function(info = TRUE) {
     select(
       collection_date,
       site_id,
-      sample_id,
-      site_name_rep_detail,
-      tidyr::ends_with("EPA3051"),
-      water_pH,
-      OM_by_LOI_pct,
-      tidyr::ends_with("Mehlich3"),
-      Est_CEC,
-      Base_Sat_pct,
+      # sample_id,
+      # site_name_rep_detail,
+      # tidyr::ends_with("EPA3051"),
+      # water_pH,
+      # OM_by_LOI_pct,
+      # tidyr::ends_with("Mehlich3"),
+      # Est_CEC,
+      # Base_Sat_pct,
       P_Sat_ratio
     ) %>%
-    mutate(As_EPA3051 = case_when(As_EPA3051 == "< 3.0" ~ "0", TRUE ~ As_EPA3051)) %>%  # As can't be detected lower than 3.0
-    mutate(Cd_EPA3051 = case_when(Cd_EPA3051 == "< 0.2" ~ "0", TRUE ~ Cd_EPA3051)) %>%  # Cd can't be detected lower than 0.2
-    mutate(across(5:28, \(x) case_when(x == "Not yet tested" ~ NA, TRUE ~ x))) %>%
-    mutate(across(5:28, \(x) as.numeric(x)))
+    # mutate(As_EPA3051 = case_when(As_EPA3051 == "< 3.0" ~ "0", TRUE ~ As_EPA3051)) %>%  # As can't be detected lower than 3.0
+    # mutate(Cd_EPA3051 = case_when(Cd_EPA3051 == "< 0.2" ~ "0", TRUE ~ Cd_EPA3051)) %>%  # Cd can't be detected lower than 0.2
+    # mutate(across(5:28, \(x) case_when(x == "Not yet tested" ~ NA, TRUE ~ x))) %>%
+    # mutate(across(5:28, \(x) as.numeric(x))) %>%
+    head()
 
   if (info) {
     cli_alert_warning(
-      col_magenta(
+      col_red(
         "Arsenic (As_EPA3051) is not detectable below 3.0 mg/kg. Cadmium (Cd_EPA3051) is not detectable below 0.2 mg/kg."
       )
     )
-    cli_alert(col_cyan(
-      "See the data dictionary by typing {.code ?BioDIGS_soil_data()}."
-    ))
-    cli_alert(col_cyan("Visit us at {.url https://biodigs.org/}"))
+    BioDIGS_note("?BioDIGS_soil_data()")
+    BioDIGS_note(website = T)
   }
 
   return(testing_data_)
