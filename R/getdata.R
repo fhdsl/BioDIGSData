@@ -1,53 +1,35 @@
 
-#' Gets relevant data from Google Sheets.
+#' Gets relevant data from a specified snapshot.
+#'
+#' @param local TRUE or FALSE, whether to use a local file or pull from GitHub. Can be used if you don't have an internet connection.
+#' @param snapshot string specifying which snapshot to use, e.g., "BioDIGS_20250206.csv"
 #'
 #' @return an uncleaned `data.frame`
-#' @import gsheet
-#' @import tidyr
-#' @import dplyr
 #' @export
 #' @keywords internal
 #'
 #' @examples
 #' getdata()
-getdata <- function() {
-  # Set filename and URLs
-  google_sheet_url_1 <-
-    "https://docs.google.com/spreadsheets/d/1KrPJe9OOGuix2EAvcTfuspAe3kqN-y20Huyf5ImBEl4/edit#gid=804798874"
-  google_sheet_url_2 <-
-    "https://docs.google.com/spreadsheets/d/1l7wuOt0DZp0NHMAriedbG4EJkl06Mh-G01CrVh8ySJE/edit#gid=804798874"
-  google_sheet_url_3 <-
-    "https://docs.google.com/spreadsheets/d/1duPtC8L9KL51YQzQ1rZ5785iH3RjABZFCYu8SWjAPTU/edit#gid=1458650276"
-  google_sheet_url_4 <- # Soil data
-    "https://docs.google.com/spreadsheets/d/109xYUM48rjj33B76hZ3bNlrm8u-_S6uyoE_3wSCp0r0/edit#gid=1458650276"
-  soil_file <- "soil_data.csv"
-
-  # Check if the file is/has been written.
-  # If not, read it in from google sheets, save as `soil_data`
-  if (!(file.exists(soil_file))) {
-    # Google Authentication not needed because "anyone can view"
-    # Do the data wrangling
-    soil_data <-
-      inner_join(
-        gsheet2tbl(google_sheet_url_1),
-        gsheet2tbl(google_sheet_url_2),
-        by = c(`What is your site name?` = 'site_name'),
-        keep = TRUE
-      ) %>%
-      inner_join(gsheet2tbl(google_sheet_url_3), by = "full_name") %>%
-      inner_join(
-        gsheet2tbl(google_sheet_url_4),
-        by = c("full_name", "site_id")
-      ) %>% # Special characters
-      rename("type" = `Which best describes your site?`) %>%
-      separate("type", into = c("type", "type2"), sep = ":")
-    write.csv(soil_data, soil_file)
+#' getdata(snapshot = "BioDIGS_20250206.csv")
+getdata <- function(local = F, snapshot = NULL) {
+  # Specific snapshot name
+  if (is.null(snapshot)){
+    filename <- "BioDIGS_20250206.csv"
   } else {
-    soil_data <- read.csv(soil_file)[,-1]
+    filename <- snapshot
   }
 
-  return(soil_data)
-
+  # read in the data locally or from remote snapshot
+  if (local) {
+    thedata <- read.csv(filename)
+  } else {
+    theurl <- paste0(
+      "https://raw.githubusercontent.com/FredHutch/GDSCNsoilsites/refs/heads/main/data/snapshots/",
+      filename
+    )
+    thedata <- read.csv(theurl)
+  }
+  return(thedata)
 }
 
 
@@ -68,8 +50,7 @@ clean_gps_points <- function(the_data) {
   # Clean up GPS points:
   # Remove parentheses, split column, fix negatives, and make numeric
   the_data <- the_data %>%
-    rename("coord" = 4) %>%
-    mutate(coord = str_replace_all(coord, "[//(,//)]*", "")) %>%
+    mutate(coord = str_replace_all(gps, "[//(,//)]*", "")) %>%
     tidyr::separate(coord,
                     into = c("latitude", "longitude"),
                     sep = " ") %>%
@@ -85,11 +66,18 @@ clean_gps_points <- function(the_data) {
 
 #' Produce data in a nice clean format for use in R.
 #'
+#' @details
+#' | **Field Name** |      | **Description** |
+#' |----------------|------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+#' |  site_id         | `  ` | Unique letter and number site name |
+#' |  type            | `  ` | Management type. Can be managed or unmanaged |
+#' |  latitude        | `  ` | Latitude of the sampling location |
+#' |  longitude       | `  ` | Longitude of the sampling location |
+#'
 #' @param info if set to TRUE, print important information to the console. This can be disabled with `info = FALSE`.
 #'
 #' @return a `data.frame`
 #' @import dplyr
-#' @import lubridate
 #' @export
 #'
 #' @examples
@@ -100,9 +88,9 @@ BioDIGS_metadata <- function(info = TRUE) {
 
   metadata_ <-
     metadata_ %>%
-    mutate(timestamp = lubridate::as_datetime(Timestamp.x)) %>%
-    mutate(date_sampled = lubridate::date(timestamp)) %>%
-    select(site_id, site_name, type, date_sampled, latitude, longitude)
+    rename(type = mgmt_type) %>%
+    select(site_id, type, latitude, longitude) %>%
+    distinct()
 
   if(info){
     cli_alert(col_cyan("See the data dictionary by typing {.code ?BioDIGS_metadata()}."))
@@ -112,6 +100,7 @@ BioDIGS_metadata <- function(info = TRUE) {
   return(metadata_)
 }
 
+############# Stopped here
 
 #' Produce DNA concentration data in a clean format for use in R.
 #'
