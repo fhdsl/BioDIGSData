@@ -2,7 +2,7 @@
 % Please edit documentation in R/getdata.R
 \name{BioDIGS_DNA_conc_data}
 \alias{BioDIGS_DNA_conc_data}
-\title{Produce DNA concentration data in a clean format for use in R.}
+\title{BioDIGS DNA metadata}
 \usage{
 BioDIGS_DNA_conc_data(info = TRUE)
 }
@@ -13,8 +13,26 @@ BioDIGS_DNA_conc_data(info = TRUE)
 a \code{data.frame}
 }
 \description{
-Produce DNA concentration data in a clean format for use in R.
+BioDIGS DNA concentration data in a clean format for use in R. For more about BioDIGS, see \url{https://biodigs.org/}.
+}
+\details{
+\tabular{lll}{
+   \strong{Field Name} \tab  \tab \strong{Description} \cr
+   purpose \tab \verb{  } \tab Values can be "Troubleshooting" or "Project". Troubleshooting samples were collected to understand what would be possible with sequencing and typically did not involve students and faculty outside of the organizing team. \cr
+   vessel \tab \verb{  } \tab Method for collecting and storing soil samples prior to sequencing. \cr
+   collection_date \tab \verb{  } \tab Date sample was collected (soil was removed from a site). \cr
+   site_id \tab \verb{  } \tab Unique letter and number site name. Check \code{BioDIGS_metadata()} for GPS coordinates, origin, and more. \cr
+   sample_id \tab \verb{  } \tab Unique sequencing sample identifier. \cr
+   site_name_rep_detail \tab \verb{  } \tab Detailed label for the sample, intended to help disambiguate in case of confusion. \cr
+   sequencing_facility \tab \verb{  } \tab Facility/lab at which the sample was sequenced. \cr
+   sequencing_instrument \tab \verb{  } \tab Sequencing technology/machine used to generate sequencing data. \cr
+   DNA_OK \tab \verb{  } \tab Flag to indicate whether DNA was successfully extracted from the sample. \cr
+   Qubit_conc_ng_ul \tab \verb{  } \tab Concentration of the DNA as measured by the Qubit instrument, in nanograms per microliter. \cr
+}
 }
 \examples{
 BioDIGS_DNA_conc_data()
+}
+\seealso{
+\code{\link[=BioDIGS_metadata]{BioDIGS_metadata()}}
 }

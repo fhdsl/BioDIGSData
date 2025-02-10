@@ -15,6 +15,15 @@ a \code{data.frame}
 \description{
 Produce data in a nice clean format for use in R.
 }
+\details{
+\tabular{lll}{
+   \strong{Field Name} \tab  \tab \strong{Description} \cr
+   site_id \tab \verb{  } \tab Unique letter and number site name \cr
+   type \tab \verb{  } \tab Management type. Can be managed or unmanaged \cr
+   latitude \tab \verb{  } \tab Latitude of the sampling location \cr
+   longitude \tab \verb{  } \tab Longitude of the sampling location \cr
+}
+}
 \examples{
 BioDIGS_metadata()
 }

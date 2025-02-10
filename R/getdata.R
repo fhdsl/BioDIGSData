@@ -11,7 +11,7 @@
 #' @examples
 #' getdata()
 #' getdata(snapshot = "BioDIGS_20250206.csv")
-getdata <- function(local = F, snapshot = NULL) {
+getdata <- function(local = T, snapshot = NULL) {
   # Specific snapshot name
   if (is.null(snapshot)){
     filename <- "BioDIGS_20250206.csv"
@@ -89,28 +89,44 @@ BioDIGS_metadata <- function(info = TRUE) {
   metadata_ <-
     metadata_ %>%
     rename(type = mgmt_type) %>%
-    select(site_id, type, latitude, longitude) %>%
+    dplyr::select(site_id, type, origin, latitude, longitude, partner_faculty, google_img_id) %>%
     distinct()
 
   if(info){
-    cli_alert(col_cyan("See the data dictionary by typing {.code ?BioDIGS_metadata()}."))
+    cli_alert(col_cyan("See the data dictionary by typing ?BioDIGS_metadata() ."))
     cli_alert(col_cyan("Visit us at {.url https://biodigs.org/}"))
   }
 
   return(metadata_)
 }
 
-############# Stopped here
 
-#' Produce DNA concentration data in a clean format for use in R.
+#' BioDIGS DNA metadata
+#'
+#' @description BioDIGS DNA concentration data in a clean format for use in R. For more about BioDIGS, see <https://biodigs.org/>.
+#'
+#' @details
+#' | **Field Name** |      | **Description** |
+#' |----------------|------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+#' |  purpose               | `  ` | Values can be "Troubleshooting" or "Project". Troubleshooting samples were collected to understand what would be possible with sequencing and typically did not involve students and faculty outside of the organizing team. |
+#' |  vessel                | `  ` | Method for collecting and storing soil samples prior to sequencing. |
+#' |  collection_date       | `  ` | Date sample was collected (soil was removed from a site). |
+#' |  site_id               | `  ` | Unique letter and number site name. Check `BioDIGS_metadata()` for GPS coordinates, origin, and more. |
+#' |  sample_id             | `  ` | Unique sequencing sample identifier. |
+#' |  site_name_rep_detail  | `  ` | Detailed label for the sample, intended to help disambiguate in case of confusion. |
+#' |  sequencing_facility   | `  ` | Facility/lab at which the sample was sequenced. |
+#' |  sequencing_instrument | `  ` | Sequencing technology/machine used to generate sequencing data. |
+#' |  DNA_OK                | `  ` | Flag to indicate whether DNA was successfully extracted from the sample. |
+#' |  Qubit_conc_ng_ul      | `  ` | Concentration of the DNA as measured by the Qubit instrument, in nanograms per microliter. |
 #'
 #' @param info if set to TRUE, print important information to the console. This can be disabled with `info = FALSE`.
-#'
 #'
 #' @return a `data.frame`
 #' @import dplyr
 #' @import cli
 #' @export
+#'
+#' @seealso [BioDIGS_metadata()]
 #'
 #' @examples
 #' BioDIGS_DNA_conc_data()
@@ -120,15 +136,20 @@ BioDIGS_DNA_conc_data <- function(info = TRUE) {
 
   dna_data_ <-
     dna_data %>%
-    select(site_id,
-           site_name,
-           ul_hydration,
-           qubit_concentration_ng_ul,
-           total_ng,
-           type)
+    dplyr::filter(bulk_type == "Molecular") %>%
+    dplyr::select(purpose,
+           vessel,
+           collection_date,
+           site_id,
+           sample_id,
+           site_name_rep_detail,
+           sequencing_facility,
+           sequencing_instrument,
+           DNA_OK,
+           Qubit_conc_ng_ul)
 
   if(info){
-    cli_alert(col_cyan("See the data dictionary by typing {.code ?BioDIGS_DNA_conc_data()}."))
+    cli_alert(col_cyan("See the data dictionary by typing ?BioDIGS_DNA_conc_data() ."))
     cli_alert(col_cyan("Visit us at {.url https://biodigs.org/}"))
   }
 
