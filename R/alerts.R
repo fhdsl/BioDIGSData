@@ -26,3 +26,25 @@ BioDIGS_note <- function(x = NULL, website = F) {
   }
   return(thealert)
 }
+
+
+#' BioDIGS Soil CLI warning
+#'
+#' @description Tell users about important caveat in the measurement of arsenic and cadmium.
+#'
+#' @returns A command-line alert
+#' @import cli
+#' @export
+#' @keywords internal
+#'
+#' @examples
+#' BioDIGS_soil_warning()
+BioDIGS_soil_warning <- function() {
+  thealert <-
+    cli_alert_warning(
+      style_italic(col_yellow(
+        "Arsenic (As_EPA3051) is not detectable below 3.0 mg/kg. Cadmium (Cd_EPA3051) is not detectable below 0.2 mg/kg. Observations under these values appear as zeros in the dataset."
+      ))
+    )
+  return(thealert)
+}

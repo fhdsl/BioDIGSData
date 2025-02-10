@@ -238,11 +238,7 @@ BioDIGS_soil_data <- function(info = TRUE) {
     mutate(across(5:28, \(x) as.numeric(x)))
 
   if (info) {
-    cli_alert_warning(
-      col_red(
-        "Arsenic (As_EPA3051) is not detectable below 3.0 mg/kg. Cadmium (Cd_EPA3051) is not detectable below 0.2 mg/kg."
-      )
-    )
+    BioDIGS_soil_warning()
     BioDIGS_note("?BioDIGS_soil_data()")
     BioDIGS_note(website = T)
   }
