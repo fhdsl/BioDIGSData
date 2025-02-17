@@ -17,4 +17,5 @@ Imports:
     lubridate,
     magrittr,
     stringr,
-    tidyr
+    tidyr,
+    tidyverse
