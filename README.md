@@ -15,6 +15,12 @@ devtools::install_github("fhdsl/BioDIGSData")
 Bring in the data using predefined functions. For example:
 
 ```
-# Load soil data
+# Load soil property data
 my_data <- BioDIGSData::BioDIGS_soil_data()
+
+# Load site metadata
+my_data <- BioDIGSData::BioDIGS_metadata()
+
+# Load DNA metadata
+my_data <- BioDIGSData::BioDIGS_DNA_conc_data()
 ```
